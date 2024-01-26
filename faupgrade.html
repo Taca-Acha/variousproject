@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h3>강화</h3>
+    <h4>-고정 확률 기준[UPDATE - 2023/12/31]-</h4>
+    <h4>강화 여부(이전 등급 > 지금 등급)[시도 횟수/성공 횟수/실패 횟수]</h4>
+    <hr>
+    <div id="resultt"></div>
+    <div class="plrFrame">
+        <div id="plr">
+            <h3>선수 이름:OOO</h3>
+        </div>
+        <h3 id="deung">+1(확률:100%)</h3>
+        <input type="button" value="강화" onclick="start()">
+    </div>
+    <hr>
+    <div id="historys"></div>
+    <script>
+        const gradePrint = document.getElementById('deung');
+        const failSuccess = document.getElementById('resultt');
+        const historys = document.getElementById('historys');
+        const plr = document.getElementById('plr');
+
+        const gradePer = [100, 81, 64, 50, 26, 15, 7, 4, 2];
+        var grade = 1;
+        var trys = 0;
+        var fails = 0;
+        var success = 0;
+
+        function start() {
+            trys++;
+            if(grade > 0) {
+                if(Math.random() < (gradePer[grade-1] / 100)) {
+                    success += 1;
+                    grade += 1;
+                    failSuccess.innerHTML = `<h3 style="color : yellowgreen;">강화 성공!</h3>`;
+                    historys.innerHTML += `<h3 style="color : yellowgreen;">O강화 성공!(${grade-1}>${grade})(${gradePer[grade-2]}%)[${trys}/${success}/${fails}]</h3>`;
+                    gradePrint.innerHTML = `+${grade}(확률:${gradePer[grade-1]}%)`;
+                } else {
+                    fails += 1;
+                    var minusPoint = Math.floor((Math.random() * (3 - 1)) + 1);
+                    grade = grade - minusPoint;
+                    if(grade < 1) {
+                        grade = 1; //등급 1로 초기화
+                        minusPoint = grade - 1; //minusPoint 재설정0
+                    }
+                    failSuccess.innerHTML = `<h3 style="color : red;">강화 실패</h3>`;
+                    historys.innerHTML += `<h3 style="color : red;">X강화 실패(${grade+minusPoint}>${grade})(${gradePer[grade+minusPoint-1]}%)[${trys}/${success}/${fails}]</h3>`;
+                    gradePrint.innerHTML = `+${grade}(확률:${gradePer[grade-1]}%)`;
+                }
+            }
+            if(grade < 5) {
+                plr.innerHTML = `<h3>선수 이름:OOO</h3>`;
+            } else if(grade < 8) {
+                plr.innerHTML = `<h3 style="color: darkgray">선수 이름:OOO</h3>`;
+            } else {
+                plr.innerHTML = `<h3 style="color: darkgoldenrod">선수 이름:OOO</h3>`;
+            }
+        }
+
+        function gogogo(){
+            for(var i = 0; i < 100; i++) {
+                start();
+            }
+        }
+
+        function gogo(){
+            setTimeout(gogogo, 100);
+        }
+    </script>
+</body>
+</html>
